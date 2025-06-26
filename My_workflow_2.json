@@ -1,0 +1,166 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a professional translator. \nTranslate the contents of the given document to Tamil. \nMake sure the translation is accurate and keeps the original meaning and tone. \nOnce translated, return the Tamil version as plain text or formatted document output.\n{{ $json['I am on a holiday'] }}\n\n\n\n\n\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        140,
+        -140
+      ],
+      "id": "31c0e70c-8ba5-4350-a9ac-632bd9801a9e",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        160,
+        40
+      ],
+      "id": "63182d01-eac1-4419-809a-978df1eba791",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "mARbEI6dGk6xU6hr",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "chammu2610@gmail.com",
+        "subject": "translation",
+        "emailType": "text",
+        "message": "=translate the document{{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        480,
+        -140
+      ],
+      "id": "8c07a9f2-0e70-4032-849d-28e9707fbe86",
+      "name": "Send a message",
+      "webhookId": "e2a55df2-1a91-4820-a46f-1098c7a824ae",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "MJFlo6GfVI1mRTJ5",
+          "name": "Gmail account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1iOYbvLyX-d9TR-NLfBiLNBbUchEx6cuSuGlI1q-dqKM",
+          "mode": "list",
+          "cachedResultName": "Translate",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1iOYbvLyX-d9TR-NLfBiLNBbUchEx6cuSuGlI1q-dqKM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1iOYbvLyX-d9TR-NLfBiLNBbUchEx6cuSuGlI1q-dqKM/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -100,
+        -140
+      ],
+      "id": "6323f382-cadc-4556-9400-6a46d2637f97",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "kDh1SvemsFRs2cDv",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        -140
+      ],
+      "id": "96c71688-7169-4943-a87a-c49956138bb1",
+      "name": "When clicking ‘Execute workflow’"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e343038f-f14f-43bc-a3f4-8b5a454eea95",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e9a5bc6506f79f58142eab477bcf289962abba041f6f86cfc1a48f7779889ba7"
+  },
+  "id": "EGGn5yPZpLvQbxUI",
+  "tags": []
+}

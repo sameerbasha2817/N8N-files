@@ -1,0 +1,125 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a translator.\n\nTranslate the following text into the requested language. After translating, the result will be sent to the given email address.\n{{ $json.chatInput }}\nText to translate: \nTarget language: {{ $json.chatInput }}\nRecipient email: \n\nOnly provide the translated text in your response. Do not include the original or any extra text.\n {{ $json.sessionId }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -420,
+        -140
+      ],
+      "id": "2e364192-a746-4d8d-aafd-d3ff29d0a887",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        40
+      ],
+      "id": "d69907b7-e622-401d-9672-74c5250335f4",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "mARbEI6dGk6xU6hr",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "sameerbasha5009@gmail.com",
+        "subject": "Translation",
+        "emailType": "text",
+        "message": "=Hi hope this translation helps {{ $json.output }}With regards Sameer  ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -20,
+        -140
+      ],
+      "id": "ae5fb27f-5a45-4cef-b29a-30c35882203e",
+      "name": "Send a message",
+      "webhookId": "00ac2620-d329-46ca-94ba-ccaab94a22a7",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "MJFlo6GfVI1mRTJ5",
+          "name": "Gmail account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -620,
+        -180
+      ],
+      "id": "9cdd8f9c-3929-417a-8ed9-cffd042b62f7",
+      "name": "When chat message received",
+      "webhookId": "4bc6b2d4-1565-477d-b67d-54dc22055680"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5797da5e-9dd1-4c23-81bb-37404b170a13",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e9a5bc6506f79f58142eab477bcf289962abba041f6f86cfc1a48f7779889ba7"
+  },
+  "id": "hXmyWpZzCayroaXA",
+  "tags": []
+}
